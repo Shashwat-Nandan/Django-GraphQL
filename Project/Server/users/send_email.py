@@ -20,16 +20,32 @@ def send_confirmation_email(email, username):
         'domain': settings.DOMAIN,
         'token': token,
     }
+
     # locates our email.html in the templates folder
     msg_html = render_to_string('users/email.html', context)
     message = Mail(
         # the email that sends the confirmation email
         from_email='business@propelytics.in',
+        # from_email = "from@example.com",
         to_emails=[email],  # list of email receivers
+        # to_emails = 'to@example.com',
         subject='Account activation',  # subject of your email
         html_content=msg_html)
+
+    # sg = SendGridAPIClient(settings.EMAIL_HOST_PASSWORD)
+    #
+    # response = sg.send(message)
+    # print(response.status_code)
+    # print(response.body)
+
+
     try:
         sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
-        sg.send(message)
+
+        # sg.send(message)
+        response = sg.send(message)
+        # print(response.status_code)
+        # print(response.body)
+        # print(response.headers)
     except Exception as e:
         return str(e)
