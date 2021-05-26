@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'users',
     'products',
     'cart',
-    'allorders'
+    'allorders',
+    'billingprofile'
 
 ]
 
@@ -172,6 +173,7 @@ AUTHENTICATION_BACKENDS = [
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = 'django.db.models.UUIDField'
 
 # sendgrid settings
 SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')

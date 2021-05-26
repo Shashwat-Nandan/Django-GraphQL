@@ -3,9 +3,11 @@ from graphene_django import DjangoObjectType
 from users.schema import UserType
 from products.schema import ProductType
 from cart.schema import CartItemType
+from billingprofile.schema import BillingProfileType
 
 from .models import Order, OrderItem
 from cart.models import Cart, CartItem
+from billingprofile.models import BillingProfile
 
 class OrderType(DjangoObjectType):
     class Meta:
@@ -46,18 +48,14 @@ class CreateOrder(graphene.Mutation):
     order = graphene.Field(OrderType)
     cartitems = graphene.Field(CartItemType)
     orderitem = graphene.Field(OrderItemType)
+    billingprofile = graphene.Field(BillingProfileType)
 
 
     class Arguments:
 
-        first_name = graphene.String()
-        last_name = graphene.String()
-        email = graphene.String()
-        address = graphene.String()
-        city = graphene.String()
-        postal_code = graphene.Int()
+        id = graphene.ID(required=True)
 
-    def mutate(self, info, first_name, last_name, email, address, city, postal_code):
+    def mutate(self, info, id):
         user = info.context.user
 
         if user.is_anonymous:
@@ -68,14 +66,16 @@ class CreateOrder(graphene.Mutation):
         cartitems = CartItem.objects.filter(cart=cart)
 
         if cartitems.count() != 0:
-            order = Order(first_name=first_name, last_name=last_name, email=email,
-                                        address=address, postal_code=postal_code, city=city, user=user)
-            order.save()
+            # order = Order(first_name=first_name, last_name=last_name, email=email,
+            #                             address=address, postal_code=postal_code, city=city, user=user)
+            # order.save()
+            billingprofile = BillingProfile.objects.get(pk=id)
+            order = Order(user=user, billingprofile=billingprofile)
             for item in cartitems:
             # orderitem = OrderItem.objects.create(order=order, product=item['product'], quantity=item['quantity'])
              orderitem = OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
              cartitems.delete()
-             
+
         else:
             raise Exception('You Cart is empty')
 

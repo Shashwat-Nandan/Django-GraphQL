@@ -1,9 +1,11 @@
 from django.db import models
 from django.conf import settings
+import uuid
 
 # Models of the app are included here
 
 from products.models import Product
+from billingprofile.models import BillingProfile
 
 
 ORDER_STATUS_CHOICES =(
@@ -16,18 +18,20 @@ ORDER_STATUS_CHOICES =(
 )
 
 class Order(models.Model):
-
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField()
-    address = models.CharField(max_length=250)
-    postal_code = models.CharField(max_length=20)
-    city = models.CharField(max_length=100)
+    # order_id = models.UUIDField(primary_key=True, editable = False, default=uuid.uuid4)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    billingprofile = models.ForeignKey(BillingProfile, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
     order_status = models.CharField(max_length=120, default="Created", choices=ORDER_STATUS_CHOICES)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    #Razorpay fields
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=100, blank=True, null=True)
+
+    #
     class Meta:
         ordering = ('-created',)
     def __str__(self):
