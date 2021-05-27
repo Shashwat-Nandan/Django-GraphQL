@@ -10,7 +10,7 @@ def payment_razorpay(self):
 
     client.order.create(amount=order_amount, currency=order_currency, receipt=order_receipt, notes=notes)
     # Returns an object containing order id
-    
+
     params_dict = {
     'razorpay_order_id': '12122',
     'razorpay_payment_id': '332',
