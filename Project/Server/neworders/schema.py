@@ -3,11 +3,11 @@ from graphene_django import DjangoObjectType
 from users.schema import UserType
 from products.schema import ProductType
 from cart.schema import CartItemType
-from billingprofile.schema import BillingProfileType
+from allbilling.schema import BillingProfileType
 
 from .models import Order, OrderItem
 from cart.models import Cart, CartItem
-from billingprofile.models import BillingProfile
+from allbilling.models import BillingProfile
 
 class OrderType(DjangoObjectType):
     class Meta:

@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'neworders',
-    'billingprofile'
+    'allbilling',
 
 ]
 

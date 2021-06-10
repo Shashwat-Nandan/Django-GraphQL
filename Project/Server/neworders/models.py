@@ -5,7 +5,7 @@ import uuid
 # Models of the app are included here
 
 from products.models import Product
-from billingprofile.models import BillingProfile
+from allbilling.models import BillingProfile
 
 
 ORDER_STATUS_CHOICES =(
