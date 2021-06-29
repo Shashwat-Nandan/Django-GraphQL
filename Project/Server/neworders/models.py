@@ -9,18 +9,18 @@ from allbilling.models import BillingProfile
 
 
 ORDER_STATUS_CHOICES =(
-        ('created', 'created'),
-        ('edited', 'edited'),
-        ('cancelled', 'cancelled'),
-        ('confirmed', 'confirmed'),
-        ('dispatched', 'dispatched'),
-        ('delivered', 'delivered')
+        ('created', 'Created'),
+        ('edited', 'Edited'),
+        ('cancelled', 'Cancelled'),
+        ('confirmed', 'Confirmed'),
+        ('dispatched', 'Dispatched'),
+        ('delivered', 'Delivered')
 )
 
 class Order(models.Model):
     # order_id = models.UUIDField(primary_key=True, editable = False, default=uuid.uuid4)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    billingprofile = models.ForeignKey(BillingProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    billingprofile = models.ForeignKey(BillingProfile, on_delete=models.PROTECT)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
@@ -42,13 +42,13 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order,
                               related_name='items',
-                              on_delete=models.CASCADE)
+                              on_delete=models.PROTECT)
     product = models.ForeignKey(Product,
                                 related_name='order_items',
-                                on_delete=models.CASCADE)
-    # price = models.DecimalField(max_digits=10, decimal_places=2)
+                                on_delete=models.PROTECT)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
     def __str__(self):
         return str(self.id)
-    # def get_cost(self):
-    #     return self.price * self.quantity
+    def get_cost(self):
+        return self.price * self.quantity
